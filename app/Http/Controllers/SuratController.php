@@ -123,6 +123,7 @@ class SuratController extends Controller
                 $filter[$value[$kolom]] = $value;
             }
             $filterResult = array_values($filter);
+            
             $doubleSave = $this->saveToPublic($filterResult,$headerList);
 
             $arrResult[0] = 002;

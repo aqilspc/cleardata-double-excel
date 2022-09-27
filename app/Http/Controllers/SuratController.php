@@ -76,7 +76,7 @@ class SuratController extends Controller
 
     public function clearDataDouble($file,$kolom)
     {
-        $xlsx =SimpleXLSX::parse(public_path($file));
+        $xlsx = SimpleXLSX::parse(public_path($file));
         $ff = $xlsx->rows();
         $arrResult = [];
             foreach ( $ff as $k => $r ) 
@@ -88,12 +88,25 @@ class SuratController extends Controller
                 $rows[] = array_combine( $header_values, $r );
             }
             $mentah = $rows;
+
+            $mentah[0]['NIK'];
+
             $headerList = array_keys($mentah[0]); // is array
             if(!in_array($kolom, $headerList)){
                 $arrResult[0] = 001;
                 $arrResult[1] = implode(',', $headerList);
                 return $arrResult;
             }
+
+            for ($i=0; $i < count($mentah); $i++)
+            {
+                $kolomChoosed = $mentah[$i][$kolom];
+                if($kolomChoosed == null || $kolomChoosed == NULL)
+                {
+                    $mentah[$i][$kolom] = '0';
+                }
+            }
+            //return print_r($mentah);
             $arrTmp = [];
             for ($i=0; $i < count($mentah); $i++)
             {

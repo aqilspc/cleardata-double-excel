@@ -98,14 +98,7 @@ class SuratController extends Controller
                 return $arrResult;
             }
 
-            for ($i=0; $i < count($mentah); $i++)
-            {
-                $kolomChoosed = $mentah[$i][$kolom];
-                if($kolomChoosed == null || $kolomChoosed == NULL)
-                {
-                    $mentah[$i][$kolom] = '0';
-                }
-            }
+            
             //return print_r($mentah);
             $arrTmp = [];
             for ($i=0; $i < count($mentah); $i++)
@@ -114,8 +107,17 @@ class SuratController extends Controller
                 array_push($arrTmp, $validateKolom);
             }
 
+            //LIBAS DATA NULL
+            $arrTmpfX = array_replace($arrTmp,array_fill_keys(array_keys($arrTmp, null),''));
+            $fixArr = [];
+            foreach ($arrTmpfX as $key => $value) {
+                if($value == "" || $value == null || $value == NULL || is_null($value)){
+                    $fixArr[$key] = 'Baris '.$key++.' '.$kolom .' '. 'Kosong!';
+                }
+            }
+            //return var_dump(array_count_values($fixArr));
             //lihat double 
-            $doubleResult = array_count_values($arrTmp);
+            $doubleResult = array_count_values($fixArr);
             $doubleText = '<ul>';
             $countDouble = 0;
             foreach ($doubleResult as $dbk => $dbv) {

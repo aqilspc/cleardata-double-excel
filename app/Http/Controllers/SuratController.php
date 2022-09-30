@@ -108,16 +108,21 @@ class SuratController extends Controller
             }
 
             //LIBAS DATA NULL
-            $arrTmpfX = array_replace($arrTmp,array_fill_keys(array_keys($arrTmp, null),''));
+            //$arrTmpfX = array_replace($arrTmp,array_fill_keys(array_keys($arrTmp, null),''));
             $fixArr = [];
-            foreach ($arrTmpfX as $key => $value) {
-                if($value == "" || $value == null || $value == NULL || is_null($value)){
-                    $fixArr[$key] = 'Baris '.$key++.' '.$kolom .' '. 'Kosong!';
+
+             foreach ($arrTmp as $key => $value) {
+                if($value != ""){
+                    array_push($fixArr, strval($value));
                 }
             }
+            
+
+
             //return var_dump(array_count_values($fixArr));
             //lihat double 
-            $doubleResult = array_count_values($fixArr);
+           $doubleResult = array_count_values($fixArr);
+            //return $doubleResult;
             $doubleText = '<ul>';
             $countDouble = 0;
             foreach ($doubleResult as $dbk => $dbv) {
@@ -160,6 +165,7 @@ class SuratController extends Controller
         if($ext == 'xls' || $ext == 'xlsx'){
             $upload = $this->uploadFile($request,'file');
             $clear = $this->clearDataDouble($upload[0],$request->kolom);
+            //return $clear;
             if($clear[0] == 001){
                 return redirect()->back()->with('success','Data gagal kolom yang anda masukkan yakin '.$request->kolom.' tidak ada di dalam file , berikut list kolom di file anda '.$clear[1].' ');
             }

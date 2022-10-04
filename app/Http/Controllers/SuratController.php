@@ -74,7 +74,7 @@ class SuratController extends Controller
         return view('admin.DataKebijakan.detail',compact('data'));
     }
 
-    public function clearDataDouble($file,$kolom)
+    public function clearDataDouble($file,$kolom,$urut)
     {
         $xlsx = SimpleXLSX::parse(public_path($file));
         $ff = $xlsx->rows();
@@ -94,6 +94,12 @@ class SuratController extends Controller
             $headerList = array_keys($mentah[0]); // is array
             if(!in_array($kolom, $headerList)){
                 $arrResult[0] = 001;
+                $arrResult[1] = implode(',', $headerList);
+                return $arrResult;
+            }
+
+            if(!in_array($urut, $headerList)){
+                $arrResult[0] = 002;
                 $arrResult[1] = implode(',', $headerList);
                 return $arrResult;
             }
@@ -143,10 +149,12 @@ class SuratController extends Controller
                 $filter[$value[$kolom]] = $value;
             }
             $filterResult = array_values($filter);
+            $col = array_column( $filterResult, $urut );
+            array_multisort( $col, SORT_ASC, $filterResult );
             
             $doubleSave = $this->saveToPublic($filterResult,$headerList);
 
-            $arrResult[0] = 002;
+            $arrResult[0] = 003;
             $arrResult[1] = $doubleText;
             $arrResult[2] = $doubleSave;
             return $arrResult;
@@ -164,10 +172,13 @@ class SuratController extends Controller
         $ext = $file->getClientOriginalExtension();
         if($ext == 'xls' || $ext == 'xlsx'){
             $upload = $this->uploadFile($request,'file');
-            $clear = $this->clearDataDouble($upload[0],$request->kolom);
+            $clear = $this->clearDataDouble($upload[0],$request->kolom,$request->urut);
             //return $clear;
             if($clear[0] == 001){
                 return redirect()->back()->with('success','Data gagal kolom yang anda masukkan yakin '.$request->kolom.' tidak ada di dalam file , berikut list kolom di file anda '.$clear[1].' ');
+            }
+            if($clear[0] == 002){
+                return redirect()->back()->with('success','Data gagal kolom yang anda masukkan yakin '.$request->urut.' tidak ada di dalam file , berikut list kolom di file anda '.$clear[1].' ');
             }
             $ins = DB::table('arsip_surat')->insertGetId([
                     'judul'=>$request->judul,

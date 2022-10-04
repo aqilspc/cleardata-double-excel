@@ -56,6 +56,13 @@
                                     placeholder="Masukkan kolom yang ingin di validasi contoh : NIK , NB: MOHON PERHATIKAN BESAR KECIL NYA NAMA KOLOM!" name="kolom" required>
                                 </div>
                             </div>
+                            <label for="nama_kebijakan">KOLOM YANG DI JADIKAN NO URUT </label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="text" id="urut" class="form-control" 
+                                    placeholder="Masukkan kolom yang ingin di validasi contoh : NO. , NB: MOHON PERHATIKAN BESAR KECIL NYA NAMA KOLOM DAN TANDA BACANYA!" name="urut" required>
+                                </div>
+                            </div>
                               <div class="row clearfix">
                                 <div class="col-md-1">
                               <a href="{{url('admin/surat')}}"><button type="button" class="btn btn-primary center-block" >KEMBALI</button></a>
